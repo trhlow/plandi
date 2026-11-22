@@ -176,11 +176,16 @@ Lệnh kiểm tra chung:
 **Files:** `V3__consent.sql`, `privacy/ConsentService.java`, `privacy/internal/ConsentController.java`, `privacy/internal/TermsInterceptor.java`, các test
 **Scope:** M.
 
-### Task 10: Mã hóa cột nhạy cảm
+### Task 10: Mã hóa cột nhạy cảm ✅
 **Description:** Viết `EncryptedStringConverter` dùng AES-256-GCM với khóa lấy từ `PLANDI_DATA_KEY`. Profile `prod` thiếu khóa thì app không khởi động.
 
 **Acceptance criteria:**
-- [ ] Test privacy #9, #10 xanh.
+- [x] Test privacy #9, #10 xanh.
+
+**Done 22/11/2026:**
+- Test #9 là unit test của converter (khứ hồi, mỗi lần mã hóa ra kết quả khác, sửa 1 byte thì lỗi, sai khóa thì lỗi, giá trị lưu không chứa chuỗi gốc).
+- **Còn phải kiểm tra ở Task 23:** chưa có entity nào dùng converter, nên chưa thử Hibernate lấy converter qua Spring (cần để tiêm khóa). Cột đầu tiên là ghi chú khoản chi; thêm test đọc giá trị thô bằng SQL ở đó.
+- Profile local có khóa cố định toàn số 0 (không bí mật) để dữ liệu dev đọc lại được sau khi khởi động lại.
 
 **Verification:** `./mvnw verify`.
 **Dependencies:** Task 1.
