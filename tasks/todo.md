@@ -111,12 +111,18 @@ Lệnh kiểm tra chung:
 
 ## Phase 2: account + privacy
 
-### Task 6: Đăng ký, đăng nhập, đăng xuất, /me
+### Task 6: Đăng ký, đăng nhập, đăng xuất, /me ✅
 **Description:** Tạo bảng `account` và enum `Area` (dùng danh sách tạm nếu O4 chưa xong). Cấu hình Spring Security với session lưu trong Redis và CSRF đặt trong cookie. Làm các endpoint `register`, `login`, `logout`, `/me`, cùng `CurrentAccount` và event `AccountRegistered`.
 
 **Acceptance criteria:**
-- [ ] Test account #1, #2, #3, #5, #6, #8 xanh.
-- [ ] Ngoài `/auth/**`, `/areas` và `/actuator/health`, mọi endpoint trả 401 khi chưa đăng nhập.
+- [x] Test account #1, #2, #3, #5, #6, #8 xanh.
+- [x] Ngoài `/auth/**`, `/areas` và `/actuator/health`, mọi endpoint trả 401 khi chưa đăng nhập.
+
+**Done 22/11/2026:**
+- CSRF kiểu SPA (`csrf.spa()`) cần thêm filter đọc token ở mọi request, nếu không web không bao giờ nhận được cookie `XSRF-TOKEN`. Có `SpaAuthFlowTest` chạy Tomcat thật đi đúng luồng của `web/src/lib/api.ts`.
+- Tắt request cache của Spring Security: nếu không, mỗi request chưa đăng nhập tạo một phiên trong Redis.
+- Mật khẩu tối đa 72 byte (giới hạn bcrypt), spec đã sửa.
+- Principal trong phiên chỉ có id và vai trò, không có email hay hash mật khẩu.
 
 **Verification:** `./mvnw verify`.
 **Dependencies:** Task 1.

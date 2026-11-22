@@ -83,7 +83,7 @@ CREATE TABLE password_reset (
 ## Quy tắc
 
 - **Email:** dài tối đa 254 ký tự. Lưu sau khi trim và chuyển lowercase.
-- **Mật khẩu:** 8–128 ký tự, không được trùng email.
+- **Mật khẩu:** ít nhất 8 ký tự, tối đa 72 byte UTF-8 (khoảng 72 ký tự không dấu), không được trùng email. Giới hạn 72 byte là của bcrypt: Spring Security từ chối mật khẩu dài hơn (đổi từ 128 ký tự ngày 22/11/2026).
 - **Xác nhận tuổi:** `adultConfirmed` phải là `true`, tức người dùng tự xác nhận đủ 18 tuổi. App không thu ngày sinh.
 - **Khóa tạm khi đăng nhập sai:** sai 5 lần trong 15 phút (đếm theo email + IP trên Redis) thì bị khóa 15 phút, trả 429. Nhập mã đặt lại sai cũng áp dụng giới hạn tương tự.
 - **Đăng ký bằng email đã có trả 409:** việc này làm lộ một email đã đăng ký hay chưa. Đã chấp nhận rủi ro vì app quy mô nhỏ.
