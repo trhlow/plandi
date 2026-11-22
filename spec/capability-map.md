@@ -19,6 +19,6 @@ Build order: account → privacy → fund, catalog (song song được) → budg
 Ghi chú:
 - Mọi module được dùng `account` (để biết ai đang gọi qua `CurrentAccount`) và `shared`. Bảng trên chỉ ghi phụ thuộc nghiệp vụ. Danh sách đầy đủ nằm trong `@ApplicationModule(allowedDependencies)` ở `package-info.java` của từng module, và `ModularityTest` kiểm tra danh sách đó.
 - `web/` (React PWA) không phải module. Mỗi module làm kèm màn hình của nó, đi theo từng lát dọc.
-- privacy không phụ thuộc vào module nào khác: các module tự cài `PersonalDataHandler`, privacy chỉ gọi interface đó. Nhờ vậy không có vòng phụ thuộc privacy ↔ module.
+- privacy chỉ phụ thuộc account (biết ai đang gọi, xác nhận mật khẩu). Các module khác tự cài `PersonalDataHandler`, privacy chỉ gọi interface đó, nên không có vòng phụ thuộc. Riêng dữ liệu của account do privacy tự bọc từ API public của account, để account không phải phụ thuộc ngược lại privacy.
 - Tách các module bằng package trong một Spring Boot app (`com.plandi.<module>`). Module khác chỉ gọi qua API public của module (package gốc), không truy cập thẳng repository hay entity của nhau.
 - Những phần chung (stack, lệnh, cấu trúc, code style, test, boundaries) viết một lần trong `spec/SPEC.md`. Spec của từng module (`spec/SPEC-<id>.md`) chỉ ghi phần riêng của module.

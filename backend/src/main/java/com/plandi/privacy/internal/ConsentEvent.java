@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.Instant;
 
 @Entity
 @Table(name = "consent_event")
@@ -29,6 +30,9 @@ public class ConsentEvent {
     @Column(name = "policy_version")
     private String policyVersion;
 
+    @Column(name = "created_at", insertable = false, updatable = false)
+    private Instant createdAt;
+
     protected ConsentEvent() {}
 
     public ConsentEvent(long accountId, Purpose purpose, boolean granted, String policyVersion) {
@@ -36,6 +40,14 @@ public class ConsentEvent {
         this.purpose = purpose;
         this.granted = granted;
         this.policyVersion = policyVersion;
+    }
+
+    public Purpose purpose() {
+        return purpose;
+    }
+
+    public Instant createdAt() {
+        return createdAt;
     }
 
     public boolean granted() {

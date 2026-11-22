@@ -19,7 +19,7 @@ Người dùng tạo tài khoản bằng email và mật khẩu, đăng nhập r
 | Đặt lại mật khẩu bằng mã do admin tạo | Quên mật khẩu tự động qua email (V2, cần SMTP) |
 | Giới hạn số lần đăng nhập sai | |
 
-Xóa tài khoản và xuất dữ liệu thuộc module privacy. Ở module này, account chỉ cài `PersonalDataHandler` cho dữ liệu của mình.
+Xóa tài khoản và xuất dữ liệu thuộc module privacy. Account đưa ra `AccountService.exportData` và `deleteData` (public), và privacy bọc chúng thành handler "account". Account không tự cài `PersonalDataHandler` vì privacy đã phụ thuộc account, cài trực tiếp sẽ thành vòng phụ thuộc (đổi ngày 22/11/2026).
 
 ## API
 

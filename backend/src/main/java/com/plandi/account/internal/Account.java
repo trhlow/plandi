@@ -1,5 +1,6 @@
 package com.plandi.account.internal;
 
+import com.plandi.account.AccountExport;
 import com.plandi.account.AccountView;
 import com.plandi.shared.Area;
 import jakarta.persistence.Column;
@@ -35,6 +36,9 @@ public class Account {
     // DB đặt now() khi tạo; app chỉ ghi khi đổi hoặc đặt lại mật khẩu.
     @Column(name = "password_changed_at", insertable = false)
     private Instant passwordChangedAt;
+
+    @Column(name = "created_at", insertable = false, updatable = false)
+    private Instant createdAt;
 
     protected Account() {}
 
@@ -73,6 +77,10 @@ public class Account {
 
     Role role() {
         return role;
+    }
+
+    public AccountExport export() {
+        return new AccountExport(email, displayName, area, role.name(), createdAt);
     }
 
     public AccountView view() {

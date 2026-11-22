@@ -36,7 +36,7 @@ Từng module tự xử lý việc rút đồng ý bằng cách nghe event `Cons
 **API Java cho module khác** (package `com.plandi.privacy`):
 - `ConsentService.isGranted(long accountId, Purpose purpose)`.
 - Event `ConsentWithdrawn(long accountId, Purpose purpose)`.
-- Interface `PersonalDataHandler`. Mỗi module có dữ liệu cá nhân tự cài:
+- Interface `PersonalDataHandler`. Mỗi module có dữ liệu cá nhân tự cài (trừ account: privacy tự bọc `AccountService.exportData`/`deleteData` thành handler "account", vì account không được phụ thuộc privacy):
   ```java
   public interface PersonalDataHandler {
       String section();                       // "account", "fund", "budget"…
