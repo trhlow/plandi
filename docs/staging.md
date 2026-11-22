@@ -20,10 +20,11 @@ Chứng chỉ HTTPS miễn phí của Cloudflare (Universal SSL) chỉ phủ tê
 1. Tạo tài khoản Cloudflare miễn phí tại dash.cloudflare.com.
 2. **Add a domain** → nhập `evts.id.vn` → chọn gói **Free**. Cloudflare quét các bản ghi DNS cũ. Trang cũ đã dừng nên có thể xóa các bản ghi trỏ về VPS cũ.
 3. Cloudflare đưa hai nameserver dạng `xxx.ns.cloudflare.com`. Vào trang quản lý tên miền ở nhà đăng ký, thay hai nameserver hiện tại (`hoalu.vclouddns.com`, `ninhbinh.vclouddns.com`) bằng hai cái của Cloudflare. Chờ Cloudflare báo **Active**, thường vài giờ, có khi tới 24–48 giờ.
-4. Vào **Zero Trust → Networks → Tunnels → Create a tunnel** → chọn **Cloudflared** → đặt tên `plandi-staging` → ở bước cài đặt chọn **Docker**, chép chuỗi token sau `--token`.
-5. Mở file `.env` ở gốc repo (đã có sẵn, không commit), dán token vào `CLOUDFLARE_TUNNEL_TOKEN=`.
-6. Ở bước **Public Hostname** của tunnel: Subdomain `plandi-staging`, Domain `evts.id.vn`, Service type `HTTP`, URL `app:8080`.
-7. Trong Docker Desktop: **Settings → General → Start Docker Desktop when you sign in**, để staging tự chạy lại sau khi khởi động máy.
+4. Vào **Zero Trust → Networks → Tunnels → Create a tunnel** → chọn **Cloudflared** → đặt tên `plandi-staging` → ở bước cài đặt chọn **Docker** (không chọn Windows: connector phải chạy trong compose mới gọi được `app:8080`).
+5. Bấm nút **Copy** cạnh lệnh Docker, dán cả lệnh vào Notepad, lấy chuỗi `eyJ…` sau `--token` và dán vào `CLOUDFLARE_TUNNEL_TOKEN=` trong `.env` **trên một dòng**. Token dài khoảng 250 ký tự; bôi đen bằng tay dễ bị thiếu hoặc bị tách dòng.
+6. Chạy `docker compose -f compose.prod.yml up -d cloudflared`, chờ tunnel hiện **Healthy**. Log đúng có dòng `Registered tunnel connection`; `Tunnel not found` nghĩa là token của tunnel đã bị xóa.
+7. Ở mục **Public Hostname** của tunnel: Subdomain `plandi-staging`, Domain `evts.id.vn`, URL `http://app:8080` (phải có `http://`).
+8. Trong Docker Desktop: **Settings → General → Start Docker Desktop when you sign in**, để staging tự chạy lại sau khi khởi động máy.
 
 ## Deploy
 
