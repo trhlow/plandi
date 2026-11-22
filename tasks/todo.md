@@ -208,14 +208,14 @@ Lệnh kiểm tra chung:
 **Files:** `privacy/PersonalDataHandler.java`, `privacy/internal/PersonalDataService.java`, `privacy/internal/PersonalDataHandlers.java`, `account/PasswordVerifier.java`, test
 **Scope:** M. Dùng skill `security-and-hardening`.
 
-### Task 12: Web: tài khoản và quyền riêng tư
+### Task 12: Web: tài khoản và quyền riêng tư ✅
 
 **Tiến độ 22/11/2026:** thiết kế Figma đã duyệt ([Plandi — Thiết kế web](https://www.figma.com/design/Nc90J249lp3q8UkgHrptND)); code xong mọi màn hình, đã thử trên trình duyệt với backend local (đăng ký → đồng ý → hồ sơ → quyền riêng tư → xóa tài khoản → đăng nhập lại bị từ chối). Còn: hai tiêu chí trên điện thoại/staging bên dưới. Điều hướng dùng hash (`#/dang-nhap`), không thêm thư viện router. Nút "Nhắn admin qua Zalo" chỉ hiện khi build có `VITE_ADMIN_ZALO_URL`.
 **Description:** Làm các màn hình đăng ký, đăng nhập (có "Quên mật khẩu?"), hồ sơ, đồng ý (3 công tắc), quyền riêng tư (xuất dữ liệu, xóa tài khoản) và admin đặt lại mật khẩu. Claude soạn bản nháp trang Điều khoản và Chính sách, có ghi nguồn TMDB và Google Maps.
 
 **Acceptance criteria:**
-- [ ] Trên điện thoại: đăng ký → đồng ý → đóng trình duyệt → mở lại sau 1 ngày vẫn còn đăng nhập.
-- [ ] Xóa tài khoản trên staging rồi đăng nhập lại thì nhận 401.
+- [x] Trên điện thoại: đăng ký → đồng ý → đóng trình duyệt → mở lại sau 1 ngày vẫn còn đăng nhập (chủ dự án thử trên staging 22/11/2026; phiên 30 ngày trong Redis).
+- [x] Xóa tài khoản trên staging rồi đăng nhập lại thì nhận 401.
 
 **Verification:** Lệnh web chung và thử thủ công trên staging.
 **Dependencies:** Task 3, 11.
@@ -223,19 +223,23 @@ Lệnh kiểm tra chung:
 **Scope:** M. Dùng skill `frontend-ui-engineering`.
 
 ### Checkpoint 2 (cuối tuần 3)
-- [ ] Mọi test của account và privacy xanh. Test kiểm tra module xanh.
-- [ ] Staging: đăng ký, đồng ý, xuất dữ liệu, xóa tài khoản đều chạy.
-- [ ] Chủ dự án duyệt.
+- [x] Mọi test của account và privacy xanh. Test kiểm tra module xanh.
+- [x] Staging: đăng ký, đồng ý, xuất dữ liệu, xóa tài khoản đều chạy.
+- [x] Chủ dự án duyệt (22/11/2026).
 
 ---
 
 ## Phase 3: fund
 
-### Task 13: Quỹ Cá nhân + FundAccess
+### Task 13: Quỹ Cá nhân + FundAccess ✅
 **Description:** Tạo bảng `fund` và `fund_member` kèm partial unique index. Tạo quỹ PERSONAL khi nghe `AccountRegistered`. Làm `FundAccess`, `FundQuery`, các endpoint `GET /funds` và `GET /funds/{id}`, và `PersonalDataHandler` của fund.
 
 **Acceptance criteria:**
-- [ ] Test fund #1, #9, #11 xanh, và test #6 cho các endpoint đã có.
+- [x] Test fund #1, #9, #11 xanh, và test #6 cho các endpoint đã có.
+
+**Done 22/11/2026:**
+- Module fund dùng `JdbcClient` với SQL viết thẳng (`FundStore`) thay cho JPA: khóa chính 2 cột, và điều kiện quyền luôn nhìn thấy trong câu SQL.
+- `POST /funds/{id}/leave` hiện chỉ xử lý quỹ PERSONAL (400); luồng rời quỹ Cặp đôi làm ở Task 15. Handler xóa dữ liệu cũng chưa chạy luồng rời quỹ (ghi `shortcut` trong code).
 
 **Verification:** `./mvnw verify`.
 **Dependencies:** Task 11.
