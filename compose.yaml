@@ -1,0 +1,21 @@
+# Hạ tầng cho máy dev: docker compose up -d postgres redis
+# Chỉ mở port trên 127.0.0.1, không ra mạng ngoài.
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: plandi
+      POSTGRES_USER: plandi
+      POSTGRES_PASSWORD: plandi
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "127.0.0.1:6379:6379"
+
+volumes:
+  pgdata:
