@@ -145,11 +145,16 @@ Lệnh kiểm tra chung:
 **Files:** `account/internal/LoginThrottle.java`, `account/internal/ProfileController.java`, các test
 **Scope:** S.
 
-### Task 8: Đặt lại mật khẩu bằng mã admin
+### Task 8: Đặt lại mật khẩu bằng mã admin ✅
 **Description:** Tạo bảng `password_reset`, endpoint admin tạo mã và endpoint `reset-password`. Mã cũ chưa dùng hết hiệu lực khi tạo mã mới. Đặt lại xong thì hủy mọi phiên.
 
 **Acceptance criteria:**
-- [ ] Test account #11, #12 xanh. DB chỉ lưu hash của mã.
+- [x] Test account #11, #12 xanh. DB chỉ lưu hash của mã.
+
+**Done 22/11/2026:**
+- Mã 8 ký tự bỏ I, O, 0, 1 để đọc qua Zalo không nhầm; lưu bcrypt (mã ngắn nên không dùng SHA-256).
+- Nhập mã sai cũng bị khóa sau 5 lần như đăng nhập, bộ đếm riêng (`reset-failures`).
+- Cách cấp quyền ADMIN ghi trong `docs/staging.md`.
 
 **Verification:** `./mvnw verify`.
 **Dependencies:** Task 7.

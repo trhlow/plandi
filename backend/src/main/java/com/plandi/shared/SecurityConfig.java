@@ -29,7 +29,11 @@ class SecurityConfig {
         return http.csrf(csrf -> csrf.spa())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/actuator/health")
                         .permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/register", "/api/v1/auth/login")
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/v1/auth/register",
+                                "/api/v1/auth/login",
+                                "/api/v1/auth/reset-password")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/areas")
                         .permitAll()

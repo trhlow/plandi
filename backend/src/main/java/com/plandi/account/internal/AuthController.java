@@ -66,7 +66,7 @@ class AuthController {
         }
         // Sau proxy (Cloudflare Tunnel), Tomcat lấy IP thật từ X-Forwarded-For: server.forward-headers-strategy=native.
         String ip = request.getRemoteAddr();
-        if (throttle.isLocked(body.email(), ip)) {
+        if (throttle.isLocked("login", body.email(), ip)) {
             log.info("login locked");
             throw new ErrorResponseException(
                     HttpStatus.TOO_MANY_REQUESTS,
@@ -79,11 +79,11 @@ class AuthController {
             authenticated = authenticationManager.authenticate(
                     UsernamePasswordAuthenticationToken.unauthenticated(body.email(), body.password()));
         } catch (AuthenticationException e) {
-            throttle.recordFailure(body.email(), ip);
+            throttle.recordFailure("login", body.email(), ip);
             log.info("login failed");
             throw badCredentials();
         }
-        throttle.reset(body.email(), ip);
+        throttle.reset("login", body.email(), ip);
         long accountId = Long.parseLong(authenticated.getName());
         Role role = authenticated.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()))
                 ? Role.ADMIN

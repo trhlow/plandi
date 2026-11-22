@@ -145,7 +145,7 @@ class AccountHardeningTest {
 
         mvc.perform(get("/api/v1/admin/anything").cookie(loginCookie(user, PASSWORD)))
                 .andExpect(status().isForbidden());
-        // Chưa có endpoint admin nào (Task 8 thêm password-resets): ADMIN qua được lớp phân quyền và nhận 404.
+        // Đường dẫn không tồn tại: ADMIN qua được lớp phân quyền và nhận 404 (endpoint admin thật: PasswordResetTest).
         mvc.perform(get("/api/v1/admin/anything").cookie(loginCookie(admin, PASSWORD)))
                 .andExpect(status().isNotFound());
     }
