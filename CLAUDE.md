@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Status
 
-`backend/` is scaffolded (Task 1 of `tasks/todo.md`). `web/` is not yet. Progress is tracked in `tasks/todo.md`.
+`backend/` and `web/` are scaffolded (Tasks 1 and 3 of `tasks/todo.md`). Progress is tracked in `tasks/todo.md`.
 
 Commands (run in `backend/`, Docker must be running for Testcontainers):
 
@@ -14,6 +14,14 @@ docker compose -f ../compose.yaml up -d postgres redis     # local Postgres 17 +
 ./mvnw test -Dtest=ModularityTest                          # module boundaries only, no Docker
 ./mvnw spotless:apply                                      # format
 ./mvnw -q -DskipTests package && java -jar target/plandi-0.0.1-SNAPSHOT.jar --spring.profiles.active=local
+```
+
+Web commands (run in `web/`; the dev server proxies `/api` to `localhost:8080`):
+
+```
+npm ci
+npm run dev                                                # Vite dev server
+npm run lint && npm test && npm run build                  # oxlint, Vitest, tsc + Vite build (PWA)
 ```
 
 The project path contains Vietnamese characters, which breaks two tools on Windows: Maven 3.10.x (the wrapper is pinned to 3.9.x) and `spring-boot:run` (run the jar instead).

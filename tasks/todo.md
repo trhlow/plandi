@@ -52,13 +52,19 @@ Lệnh kiểm tra chung:
 **Files:** `docs/adr/*.md`
 **Scope:** S.
 
-### Task 3: Scaffold web
+### Task 3: Scaffold web ✅
 **Description:** Tạo `web/` gồm Vite, React, TypeScript và vite-plugin-pwa. Viết fetch wrapper tự gửi CSRF token đọc từ cookie, cùng hàm format tiền VND. Cấu hình ESLint và Vitest. Dev server proxy `/api` sang backend.
 
 **Acceptance criteria:**
-- [ ] `npm run lint && npm test && npm run build` xanh.
-- [ ] Có test Vitest cho hàm format tiền: `180000` hiển thị thành `180.000đ`; nhập `180` thì được `180000`.
-- [ ] Mở trên điện thoại thì cài được thành PWA (có manifest và icon).
+- [x] `npm run lint && npm test && npm run build` xanh.
+- [x] Có test Vitest cho hàm format tiền: `180000` hiển thị thành `180.000đ`; nhập `180` thì được `180000`.
+- [ ] Mở trên điện thoại thì cài được thành PWA (có manifest và icon). Đã kiểm tra manifest và icon trên máy dev; cài thử trên điện thoại cần HTTPS, làm ở Task 5.
+
+**Done 22/11/2026:**
+- Vite 8, React 19, TypeScript, Vitest 5, vite-plugin-pwa 2.0.
+- Lint dùng oxlint (mặc định của create-vite hiện tại) thay cho ESLint: cùng lệnh `npm run lint`, không thêm dependency.
+- Icon PNG vẽ từ `public/logo.svg` bằng script Python một lần, không thêm công cụ.
+- `npm audit` báo 4 lỗi mức moderate trong `glob`/`minimatch` mà `workbox-build` dùng lúc build. Chỉ chạy khi build, không vào bản chạy trên trình duyệt. Xem lại khi vite-plugin-pwa ra bản mới.
 
 **Verification:** Lệnh web chung; kiểm tra thủ công bằng Lighthouse PWA.
 **Dependencies:** Không.
