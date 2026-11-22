@@ -31,6 +31,17 @@ describe('api', () => {
     expect(new Headers(fetchMock.mock.calls[0][1].headers).has('X-XSRF-TOKEN')).toBe(false)
   })
 
+  it('chuyển sang màn đồng ý khi điều khoản đổi phiên bản (403 TERMS_REQUIRED)', async () => {
+    vi.stubGlobal('document', { cookie: '' })
+    const location = { hash: '#/ho-so' }
+    vi.stubGlobal('location', location)
+    stubFetch(Response.json({ status: 403, code: 'TERMS_REQUIRED' }, { status: 403 }))
+
+    await api.patch('/me', { displayName: 'An' }).catch(() => {})
+
+    expect(location.hash).toBe('#/dong-y')
+  })
+
   it('ném ApiError kèm status và ProblemDetail khi lỗi', async () => {
     vi.stubGlobal('document', { cookie: '' })
     stubFetch(Response.json({ title: 'Unauthorized', status: 401 }, { status: 401 }))

@@ -37,6 +37,8 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
 
   if (!res.ok) {
     const problem = (await res.json().catch(() => null)) as ProblemDetail | null
+    // Điều khoản đổi phiên bản: mọi API (trừ vài cái) trả 403 cho đến khi người dùng đồng ý lại.
+    if (res.status === 403 && problem?.code === 'TERMS_REQUIRED') location.hash = '#/dong-y'
     throw new ApiError(res.status, problem)
   }
   return (res.status === 204 ? undefined : await res.json()) as T
@@ -47,5 +49,5 @@ export const api = {
   post: <T = void>(path: string, body?: unknown) => request<T>('POST', path, body),
   put: <T = void>(path: string, body?: unknown) => request<T>('PUT', path, body),
   patch: <T = void>(path: string, body?: unknown) => request<T>('PATCH', path, body),
-  delete: <T = void>(path: string) => request<T>('DELETE', path),
+  delete: <T = void>(path: string, body?: unknown) => request<T>('DELETE', path, body),
 }

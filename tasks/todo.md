@@ -209,6 +209,8 @@ Lệnh kiểm tra chung:
 **Scope:** M. Dùng skill `security-and-hardening`.
 
 ### Task 12: Web: tài khoản và quyền riêng tư
+
+**Tiến độ 22/11/2026:** thiết kế Figma đã duyệt ([Plandi — Thiết kế web](https://www.figma.com/design/Nc90J249lp3q8UkgHrptND)); code xong mọi màn hình, đã thử trên trình duyệt với backend local (đăng ký → đồng ý → hồ sơ → quyền riêng tư → xóa tài khoản → đăng nhập lại bị từ chối). Còn: hai tiêu chí trên điện thoại/staging bên dưới. Điều hướng dùng hash (`#/dang-nhap`), không thêm thư viện router. Nút "Nhắn admin qua Zalo" chỉ hiện khi build có `VITE_ADMIN_ZALO_URL`.
 **Description:** Làm các màn hình đăng ký, đăng nhập (có "Quên mật khẩu?"), hồ sơ, đồng ý (3 công tắc), quyền riêng tư (xuất dữ liệu, xóa tài khoản) và admin đặt lại mật khẩu. Claude soạn bản nháp trang Điều khoản và Chính sách, có ghi nguồn TMDB và Google Maps.
 
 **Acceptance criteria:**
