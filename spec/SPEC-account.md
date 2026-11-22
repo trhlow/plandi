@@ -66,6 +66,15 @@ CREATE TABLE password_reset (
 ```
 
 - **Khu vực:** enum `Area` đặt trong `shared` vì catalog cũng dùng để gắn khu vực cho quán. Danh sách là các vùng quen gọi, cố định trong code. Đổi danh sách thì phải deploy lại, chấp nhận được khi chỉ có một thành phố. Mỗi khu vực có tọa độ tâm cố định trong enum (ADR-0006).
+- **Danh sách khu vực (bản nháp 22/11/2026, chờ chủ dự án xác nhận tên gọi):** TP Trà Vinh cũ nay là 4 phường của tỉnh Vĩnh Long (Nghị quyết 1687/NQ-UBTVQH15). Tên phường mới còn lạ, nên tên hiển thị dùng mốc quen thuộc. Tọa độ lấy từ Wikipedia và Google Maps, chỉ cần đúng khoảng vài trăm mét.
+
+  | code | Tên hiển thị | Phường mới (phường cũ) | Tâm (lat, lng) |
+  |---|---|---|---|
+  | `TRUNG_TAM` | Trung tâm (chợ Trà Vinh, Vincom) | Trà Vinh (P1, P3, P9) | 9.9356, 106.3397 |
+  | `DAI_HOC` | Khu ĐH Trà Vinh | Hòa Thuận (P5) | 9.9234, 106.3469 |
+  | `HOA_THUAN` | Hòa Thuận (phía Đông) | Hòa Thuận (xã Hòa Thuận cũ) | 9.9528, 106.3661 |
+  | `AO_BA_OM` | Ao Bà Om, Bảo tàng Khmer | Nguyệt Hóa (P7, P8, xã Nguyệt Hóa) | 9.9176, 106.3041 |
+  | `LONG_DUC` | Long Đức, ven sông Cổ Chiên | Long Đức (P4, xã Long Đức) | 9.9817, 106.3450 |
 - **Cấp quyền ADMIN:** chạy một lệnh SQL, ghi trong README. Không làm UI cho việc này.
 - **Phiên:** dùng Spring Session lưu trong Redis (`spring-session-data-redis`, đã duyệt), nên deploy lại không làm người dùng bị đăng xuất. Cookie `HttpOnly`, `Secure`, `SameSite=Lax`, tự gia hạn, hết hạn sau 30 ngày không dùng.
 - **CSRF:** bật CSRF của Spring Security, token để trong cookie (`CookieCsrfTokenRepository`) để SPA đọc và gửi lại.
@@ -110,5 +119,5 @@ CREATE TABLE password_reset (
 
 ## Open Questions
 
-1. **Danh sách vùng:** cần chủ dự án đưa 4–6 vùng hoặc mốc quen gọi ở TP Trà Vinh, kèm vị trí đại khái để đặt tọa độ tâm. Phải có trước khi viết migration và enum `Area`.
+1. **Danh sách vùng:** đã có bản nháp 5 khu ở mục Khu vực. Chủ dự án xác nhận tên gọi trước khi viết migration và enum `Area`.
 2. **Ngưỡng 18 tuổi:** kiểm tra quy định về dữ liệu trẻ em trong Luật 91/2025 trước khi mời người dùng thật. Spec hiện giữ ngưỡng 18.
