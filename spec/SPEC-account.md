@@ -6,7 +6,7 @@ Kế thừa [SPEC.md](SPEC.md). Module đầu tiên trong [capability-map.md](ca
 
 ## Objective
 
-Người dùng tạo tài khoản bằng email và mật khẩu, đăng nhập rồi ở trạng thái đăng nhập lâu dài trên điện thoại (PWA), và tự chọn khu vực sinh sống thay cho GPS. Các module khác lấy "người đang gọi là ai" từ module này, không tự đọc session.
+Người dùng tạo tài khoản bằng email và mật khẩu, đăng nhập rồi ở trạng thái đăng nhập lâu dài trên điện thoại (PWA), và tự chọn khu vực sinh sống. Server không nhận GPS (ADR-0006). Các module khác lấy "người đang gọi là ai" từ module này, không tự đọc session.
 
 ## Phạm vi
 
@@ -32,7 +32,7 @@ Xóa tài khoản và xuất dữ liệu thuộc module privacy. Ở module này
 | GET | `/api/v1/me` | — | `id, email, displayName, area, role` |
 | PATCH | `/api/v1/me` | `displayName?, area?` | 200 |
 | PUT | `/api/v1/me/password` | `currentPassword, newPassword` | 204; hủy mọi phiên khác |
-| GET | `/api/v1/areas` | — | danh sách khu vực `code, name` |
+| GET | `/api/v1/areas` | — | danh sách khu vực `code, name, lat, lng` (tọa độ tâm do Plandi đặt, để web tự tính khu gần nhất) |
 | POST | `/api/v1/admin/password-resets` | `email` | 201 + `code` (8 ký tự), chỉ ADMIN gọi được |
 
 **API Java cho module khác** (package `com.plandi.account`):
@@ -65,7 +65,7 @@ CREATE TABLE password_reset (
 );
 ```
 
-- **Khu vực:** enum `Area` đặt trong `shared` vì catalog cũng dùng để gắn khu vực cho quán. Danh sách là các vùng quen gọi, cố định trong code. Đổi danh sách thì phải deploy lại, chấp nhận được khi chỉ có một thành phố.
+- **Khu vực:** enum `Area` đặt trong `shared` vì catalog cũng dùng để gắn khu vực cho quán. Danh sách là các vùng quen gọi, cố định trong code. Đổi danh sách thì phải deploy lại, chấp nhận được khi chỉ có một thành phố. Mỗi khu vực có tọa độ tâm cố định trong enum (ADR-0006).
 - **Cấp quyền ADMIN:** chạy một lệnh SQL, ghi trong README. Không làm UI cho việc này.
 - **Phiên:** dùng Spring Session lưu trong Redis (`spring-session-data-redis`, đã duyệt), nên deploy lại không làm người dùng bị đăng xuất. Cookie `HttpOnly`, `Secure`, `SameSite=Lax`, tự gia hạn, hết hạn sau 30 ngày không dùng.
 - **CSRF:** bật CSRF của Spring Security, token để trong cookie (`CookieCsrfTokenRepository`) để SPA đọc và gửi lại.
@@ -110,5 +110,5 @@ CREATE TABLE password_reset (
 
 ## Open Questions
 
-1. **Danh sách vùng:** cần chủ dự án đưa 4–6 vùng quen gọi ở TP Trà Vinh. Phải có trước khi viết migration và enum `Area`.
+1. **Danh sách vùng:** cần chủ dự án đưa 4–6 vùng hoặc mốc quen gọi ở TP Trà Vinh, kèm vị trí đại khái để đặt tọa độ tâm. Phải có trước khi viết migration và enum `Area`.
 2. **Ngưỡng 18 tuổi:** kiểm tra quy định về dữ liệu trẻ em trong Luật 91/2025 trước khi mời người dùng thật. Spec hiện giữ ngưỡng 18.

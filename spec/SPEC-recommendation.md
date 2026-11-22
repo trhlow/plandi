@@ -16,7 +16,7 @@ Thuật toán là **một công thức chấm điểm giải thích được**, 
 |---|---|---|
 | `fundId` | Có | — Quỹ Cá nhân thì đi một mình (`partySize = 1`); quỹ Cặp đôi thì đi cùng người yêu (`partySize = 2`, kể cả khi người yêu chưa vào quỹ) |
 | `plannedAt` | Không | 18:00 thứ Bảy gần nhất (giờ Việt Nam). Web có chip "Tối nay / Thứ Bảy / Chủ nhật" |
-| `areas` | Không | Khu vực trong hồ sơ của người gọi; có lựa chọn "Toàn thành phố" |
+| `areas` | Không | Khu vực trong hồ sơ của người gọi; có lựa chọn "Toàn thành phố". Nút "Dùng vị trí của tôi" chỉ chọn sẵn mã khu vực gần nhất trên điện thoại, API không nhận tọa độ (ADR-0006) |
 | `rainy` | Không | `false` |
 | `excludeVenueIds` | Không | rỗng; dùng cho nút "Gợi ý khác" |
 
@@ -145,6 +145,7 @@ Recommendation **không lưu gì** trong V1: không lưu lịch sử gợi ý, k
 1. **Trang chủ:**
    - Chọn đi một mình hay đi cùng người yêu.
    - Chọn thời điểm bằng chip (Tối nay, Thứ Bảy, Chủ nhật).
+   - Chọn khu vực hoặc mốc (mặc định khu vực trong hồ sơ), có nút "Dùng vị trí của tôi".
    - Công tắc "Trời mưa".
    - Ngay bên dưới là 2–3 thẻ kế hoạch.
 2. **Thẻ kế hoạch:** các hoạt động theo thứ tự, mỗi hoạt động có tiền và lý do. Cuối thẻ có tổng tiền và số còn lại. Có chữ "Google Maps" khi thẻ hiện số sao.

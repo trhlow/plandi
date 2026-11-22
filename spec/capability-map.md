@@ -6,7 +6,7 @@ Nguồn: [Tài liệu nghiên cứu & khả thi](https://claude.ai/artifact/GpXG
 
 | Module id | Trách nhiệm | Phụ thuộc |
 |---|---|---|
-| account | Đăng ký, đăng nhập, phiên; hồ sơ; khu vực người dùng tự chọn (không GPS); vai trò ADMIN | — |
+| account | Đăng ký, đăng nhập, phiên; hồ sơ; khu vực người dùng tự chọn hoặc điện thoại tự chọn khu gần nhất (tọa độ không lên server, ADR-0006); vai trò ADMIN | — |
 | privacy | Đồng ý theo từng mục đích (lưu chi tiêu, cá nhân hóa, bộ lọc món ăn); điều phối xuất và xóa dữ liệu qua interface `PersonalDataHandler` mà mỗi module tự cài | account |
 | fund | Quỹ Cá nhân tự tạo khi đăng ký; quỹ Cặp đôi; link mời có hạn; rời quỹ và chia tay (mỗi người giữ phần mình, quỹ chung đóng); kiểm tra "người gọi có thuộc quỹ này không" cho mọi module khác | account, privacy |
 | catalog | Địa điểm (place_id, khoảng giá, nhãn, link TikTok, ngày kiểm tra); phim và suất chiếu CGV Vincom Trà Vinh; trang admin nhập liệu; adapter Google Places (đếm lượt bằng Redis) và adapter TMDB (job đồng bộ hằng tuần) | account |

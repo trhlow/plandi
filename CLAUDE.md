@@ -82,7 +82,7 @@ There are two goals: real users, and a backend portfolio piece for an intern or 
   The ranking is a plain formula, not ML.
 - **TMDB:** free only for non-commercial use, with attribution in About or Credits. Commercial use needs a written agreement, and TMDB data must not be used to train AI. A weekly scheduled job syncs movies. Cinema showtimes are entered by hand through the admin page, because no Vietnamese cinema chain has a public showtime API.
 - **Data the app must not collect** (Decree 356/2025, Article 4, sensitive data):
-  - no GPS location; the user picks an area instead
+  - no GPS location on the server; the user picks an area, or the phone picks the nearest area itself and sends only its code (ADR-0006)
   - no health data; food filters are optional tags with no reason asked
   - no reading of user messages
   - no scraping of TikTok, Facebook or cinema sites

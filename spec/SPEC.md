@@ -142,7 +142,7 @@ Không đặt ngưỡng % coverage. Thay vào đó, mỗi module có danh sách 
   - Đổi ranh giới module trong capability map.
 - **Never**
   - Lưu nội dung Google ngoài `place_id` (tọa độ chỉ cache tối đa 30 ngày).
-  - Thu GPS, lý do sức khỏe hay tin nhắn.
+  - Gửi hoặc lưu tọa độ người dùng trên server (vị trí chỉ dùng trên điện thoại để chọn khu vực, ADR-0006); thu lý do sức khỏe hay tin nhắn.
   - Scrape TikTok, Facebook hay web rạp.
   - Gửi dữ liệu người dùng cho LLM.
   - Dùng dữ liệu người dùng thật khi phát triển.

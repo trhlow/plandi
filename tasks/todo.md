@@ -13,7 +13,7 @@ Lệnh kiểm tra chung:
 - [ ] **O1.** Phỏng vấn 5–8 cặp đôi và 4–5 người độc thân, ghi nguyên văn (Cổng 1, mục 2 tài liệu nghiên cứu).
 - [ ] **O2.** Tạo dự án Google Cloud. Gọi thử Place Details cho 5 quán ở Trà Vinh. Thử Text Search xem trả tối đa bao nhiêu kết quả. Giới hạn API key theo IP và đặt trần ngân sách.
 - [ ] **O3.** Mở app CGV, đếm số phim và số suất trong một tuần ở CGV Vincom Trà Vinh, ghi lại giá vé.
-- [ ] **O4.** Đưa danh sách 4–6 vùng quen gọi ở TP Trà Vinh (cho enum `Area`).
+- [ ] **O4.** Đưa danh sách 4–6 vùng hoặc mốc quen gọi ở TP Trà Vinh, kèm vị trí đại khái (cho enum `Area` và nút "Dùng vị trí của tôi", ADR-0006).
 - [ ] **O5.** Tra quy định về dữ liệu trẻ em trong Luật 91/2025 (ngưỡng tuổi).
 - [ ] **O6.** Đăng ký tên miền (thử `.id.vn`) và chuyển DNS sang Cloudflare.
 - [ ] **O7.** Đăng ký TMDB API token.

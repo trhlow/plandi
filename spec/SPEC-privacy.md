@@ -98,7 +98,7 @@ Quỹ Cặp đôi khi một người xóa tài khoản sẽ do handler của fun
 
 1. **Đồng ý:** hiện ngay sau khi đăng ký. Ba công tắc, mỗi công tắc có một câu giải thích app dùng dữ liệu đó để làm gì. Tất cả mặc định tắt.
 2. **Quyền riêng tư (trong Hồ sơ):** gồm các công tắc như trên, nút tải dữ liệu, và nút xóa tài khoản (phải nhập lại mật khẩu).
-3. **Trang Điều khoản và Chính sách:** trang tĩnh tiếng Việt. Có mục ghi nguồn TMDB và Google Maps.
+3. **Trang Điều khoản và Chính sách:** trang tĩnh tiếng Việt. Có mục ghi nguồn TMDB và Google Maps, và nói rõ vị trí chỉ dùng trên điện thoại để chọn khu vực, không gửi đi (ADR-0006).
 
 ## Success Criteria
 
