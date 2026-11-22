@@ -133,11 +133,11 @@ Lệnh kiểm tra chung:
 **Description:** Khóa tạm theo email + IP dùng Redis. Endpoint `PUT /me/password` hủy các phiên khác. `PATCH /me` sửa hồ sơ, `GET /areas` trả danh sách khu vực. Thêm guard ADMIN cho `/admin/**`. Log không chứa email.
 
 **Acceptance criteria:**
-- [x] Test account #4, #7, #9, #10 xanh.
-
-**Done 22/11/2026:**
-- Phiên Redis chuyển sang loại indexed (`spring.session.data.redis.repository-type`, tên mới của Boot 4) để tìm được mọi phiên của một tài khoản.
-- Khóa đăng nhập đếm theo hash của email + IP trên Redis. Sau Cloudflare Tunnel, IP thật lấy từ `X-Forwarded-For` (`server.forward-headers-strategy=native`).
+- [x] Test account #4, #7, #9, #10 xanh.
+
+**Done 22/11/2026:**
+- Phiên Redis chuyển sang loại indexed (`spring.session.data.redis.repository-type`, tên mới của Boot 4) để tìm được mọi phiên của một tài khoản.
+- Khóa đăng nhập đếm theo hash của email + IP trên Redis. Sau Cloudflare Tunnel, IP thật lấy từ `X-Forwarded-For` (`server.forward-headers-strategy=native`).
 - Test #9 phần ADMIN hiện kiểm tra 404 (qua được phân quyền) vì chưa có endpoint admin; Task 8 thêm `POST /admin/password-resets`.
 
 **Verification:** `./mvnw verify`.
@@ -149,11 +149,11 @@ Lệnh kiểm tra chung:
 **Description:** Tạo bảng `password_reset`, endpoint admin tạo mã và endpoint `reset-password`. Mã cũ chưa dùng hết hiệu lực khi tạo mã mới. Đặt lại xong thì hủy mọi phiên.
 
 **Acceptance criteria:**
-- [x] Test account #11, #12 xanh. DB chỉ lưu hash của mã.
-
-**Done 22/11/2026:**
-- Mã 8 ký tự bỏ I, O, 0, 1 để đọc qua Zalo không nhầm; lưu bcrypt (mã ngắn nên không dùng SHA-256).
-- Nhập mã sai cũng bị khóa sau 5 lần như đăng nhập, bộ đếm riêng (`reset-failures`).
+- [x] Test account #11, #12 xanh. DB chỉ lưu hash của mã.
+
+**Done 22/11/2026:**
+- Mã 8 ký tự bỏ I, O, 0, 1 để đọc qua Zalo không nhầm; lưu bcrypt (mã ngắn nên không dùng SHA-256).
+- Nhập mã sai cũng bị khóa sau 5 lần như đăng nhập, bộ đếm riêng (`reset-failures`).
 - Cách cấp quyền ADMIN ghi trong `docs/staging.md`.
 
 **Verification:** `./mvnw verify`.
@@ -161,15 +161,19 @@ Lệnh kiểm tra chung:
 **Files:** `V2__password_reset.sql`, `account/internal/PasswordResetService.java`, các test
 **Scope:** S.
 
-### Task 9: Đồng ý theo mục đích
+### Task 9: Đồng ý theo mục đích ✅
 **Description:** Tạo bảng `consent_event`. Ghi `TERMS` khi nghe `AccountRegistered`. Làm `ConsentService`, event `ConsentWithdrawn`, API `/consents`. Thêm filter trả 403 `TERMS_REQUIRED` khi `policyVersion` tăng.
 
 **Acceptance criteria:**
-- [ ] Test privacy #1, #2, #3, #11 xanh.
+- [x] Test privacy #1, #2, #3, #11 xanh.
+
+**Done 22/11/2026:**
+- Chặn `TERMS_REQUIRED` làm bằng `HandlerInterceptor` cho `/api/**` thay vì filter, vì cần chạy sau khi Spring Security đã biết người gọi là ai.
+- Khi chưa đồng ý lại vẫn gọi được: `/auth/**`, `/consents`, `/areas`, `GET /me`, `/me/export`, `DELETE /me` (đồng ý lại hoặc rời app).
 
 **Verification:** `./mvnw verify`.
 **Dependencies:** Task 6.
-**Files:** `V3__consent.sql`, `privacy/ConsentService.java`, `privacy/internal/ConsentController.java`, `privacy/internal/TermsFilter.java`, các test
+**Files:** `V3__consent.sql`, `privacy/ConsentService.java`, `privacy/internal/ConsentController.java`, `privacy/internal/TermsInterceptor.java`, các test
 **Scope:** M.
 
 ### Task 10: Mã hóa cột nhạy cảm
