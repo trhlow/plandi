@@ -3,6 +3,7 @@ package com.plandi.account;
 import com.plandi.account.internal.Account;
 import com.plandi.account.internal.AccountRepository;
 import com.plandi.account.internal.EmailTakenException;
+import com.plandi.account.internal.PasswordResetRepository;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Locale;
@@ -23,11 +24,17 @@ public class AccountService {
     private static final Logger log = LoggerFactory.getLogger(AccountService.class);
 
     private final AccountRepository accounts;
+    private final PasswordResetRepository passwordResets;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher events;
 
-    AccountService(AccountRepository accounts, PasswordEncoder passwordEncoder, ApplicationEventPublisher events) {
+    AccountService(
+            AccountRepository accounts,
+            PasswordResetRepository passwordResets,
+            PasswordEncoder passwordEncoder,
+            ApplicationEventPublisher events) {
         this.accounts = accounts;
+        this.passwordResets = passwordResets;
         this.passwordEncoder = passwordEncoder;
         this.events = events;
     }
@@ -60,6 +67,20 @@ public class AccountService {
     @Transactional(readOnly = true)
     public AccountView find(long accountId) {
         return accounts.findById(accountId).orElseThrow().view();
+    }
+
+    /** Dữ liệu của module account trong file xuất (privacy gọi). Không có hash mật khẩu. */
+    @Transactional(readOnly = true)
+    public AccountExport exportData(long accountId) {
+        return accounts.findById(accountId).orElseThrow().export();
+    }
+
+    /** Xóa mọi dòng của module account; privacy gọi cuối cùng, trong transaction xóa tài khoản. */
+    @Transactional
+    public void deleteData(long accountId) {
+        passwordResets.deleteByAccountId(accountId);
+        accounts.deleteById(accountId);
+        log.info("account data deleted accountId={}", accountId);
     }
 
     @Transactional

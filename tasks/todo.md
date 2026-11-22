@@ -180,11 +180,11 @@ Lệnh kiểm tra chung:
 **Description:** Viết `EncryptedStringConverter` dùng AES-256-GCM với khóa lấy từ `PLANDI_DATA_KEY`. Profile `prod` thiếu khóa thì app không khởi động.
 
 **Acceptance criteria:**
-- [x] Test privacy #9, #10 xanh.
-
-**Done 22/11/2026:**
-- Test #9 là unit test của converter (khứ hồi, mỗi lần mã hóa ra kết quả khác, sửa 1 byte thì lỗi, sai khóa thì lỗi, giá trị lưu không chứa chuỗi gốc).
-- **Còn phải kiểm tra ở Task 23:** chưa có entity nào dùng converter, nên chưa thử Hibernate lấy converter qua Spring (cần để tiêm khóa). Cột đầu tiên là ghi chú khoản chi; thêm test đọc giá trị thô bằng SQL ở đó.
+- [x] Test privacy #9, #10 xanh.
+
+**Done 22/11/2026:**
+- Test #9 là unit test của converter (khứ hồi, mỗi lần mã hóa ra kết quả khác, sửa 1 byte thì lỗi, sai khóa thì lỗi, giá trị lưu không chứa chuỗi gốc).
+- **Còn phải kiểm tra ở Task 23:** chưa có entity nào dùng converter, nên chưa thử Hibernate lấy converter qua Spring (cần để tiêm khóa). Cột đầu tiên là ghi chú khoản chi; thêm test đọc giá trị thô bằng SQL ở đó.
 - Profile local có khóa cố định toàn số 0 (không bí mật) để dữ liệu dev đọc lại được sau khi khởi động lại.
 
 **Verification:** `./mvnw verify`.
@@ -192,16 +192,20 @@ Lệnh kiểm tra chung:
 **Files:** `privacy/EncryptedStringConverter.java`, `privacy/internal/DataKeyConfig.java`, test
 **Scope:** S.
 
-### Task 11: Xuất dữ liệu và xóa tài khoản
+### Task 11: Xuất dữ liệu và xóa tài khoản ✅
 **Description:** Tạo interface `PersonalDataHandler`. Account và privacy tự cài handler của mình. Làm endpoint `GET /me/export` (tối đa 5 lần/ngày) và `DELETE /me` (xác nhận bằng mật khẩu, xóa trong một transaction, hủy phiên). Viết test quét mọi bảng có cột tên kết thúc bằng `account_id`.
 
 **Acceptance criteria:**
-- [ ] Test privacy #4–#8 xanh.
-- [ ] Test quét (#6) tự áp dụng cho bảng mới mà không phải sửa test.
+- [x] Test privacy #4–#8 xanh.
+- [x] Test quét (#6) tự áp dụng cho bảng mới mà không phải sửa test. Đã thử bỏ xóa `consent_event`: test đỏ và chỉ đúng tên bảng.
+
+**Done 22/11/2026:**
+- Account không cài `PersonalDataHandler` (sẽ thành vòng phụ thuộc với privacy); privacy bọc `AccountService.exportData`/`deleteData`. Spec account, privacy và capability map đã sửa.
+- Giới hạn 5 lần xuất/ngày đếm trên Redis theo ngày giờ Việt Nam.
 
 **Verification:** `./mvnw verify`.
 **Dependencies:** Task 8, 9.
-**Files:** `privacy/PersonalDataHandler.java`, `privacy/internal/ExportService.java`, `privacy/internal/AccountDeletionService.java`, `account/internal/AccountDataHandler.java`, test
+**Files:** `privacy/PersonalDataHandler.java`, `privacy/internal/PersonalDataService.java`, `privacy/internal/PersonalDataHandlers.java`, `account/PasswordVerifier.java`, test
 **Scope:** M. Dùng skill `security-and-hardening`.
 
 ### Task 12: Web: tài khoản và quyền riêng tư
