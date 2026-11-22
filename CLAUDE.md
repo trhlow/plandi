@@ -24,6 +24,13 @@ npm run dev                                                # Vite dev server
 npm run lint && npm test && npm run build                  # oxlint, Vitest, tsc + Vite build (PWA)
 ```
 
+Staging (home machine, Cloudflare Tunnel → https://plandi-staging.evts.id.vn, setup in `docs/staging.md`):
+
+```
+./deploy.sh                                                # git pull → build → docker compose -f compose.prod.yml up -d
+docker compose -f compose.prod.yml logs -f app cloudflared
+```
+
 The project path contains Vietnamese characters, which breaks two tools on Windows: Maven 3.10.x (the wrapper is pinned to 3.9.x) and `spring-boot:run` (run the jar instead).
 
 Module boundaries are enforced: each module's `package-info.java` lists `allowedDependencies`, and `ModularityTest` fails on any other dependency or on use of another module's `internal` package.

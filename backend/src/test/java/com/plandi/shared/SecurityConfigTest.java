@@ -30,7 +30,7 @@ class SecurityConfigTest {
     }
 
     @Test
-    void apiIsBlockedUntilAuthExists() throws Exception {
-        mvc.perform(get("/api/v1/me")).andExpect(status().isForbidden());
+    void apiRequiresLogin() throws Exception {
+        mvc.perform(get("/api/v1/me")).andExpect(status().isUnauthorized());
     }
 }

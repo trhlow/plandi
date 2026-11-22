@@ -66,7 +66,7 @@ CREATE TABLE password_reset (
 ```
 
 - **Khu vực:** enum `Area` đặt trong `shared` vì catalog cũng dùng để gắn khu vực cho quán. Danh sách là các vùng quen gọi, cố định trong code. Đổi danh sách thì phải deploy lại, chấp nhận được khi chỉ có một thành phố. Mỗi khu vực có tọa độ tâm cố định trong enum (ADR-0006).
-- **Danh sách khu vực (bản nháp 22/11/2026, chờ chủ dự án xác nhận tên gọi):** TP Trà Vinh cũ nay là 4 phường của tỉnh Vĩnh Long (Nghị quyết 1687/NQ-UBTVQH15). Tên phường mới còn lạ, nên tên hiển thị dùng mốc quen thuộc. Tọa độ lấy từ Wikipedia và Google Maps, chỉ cần đúng khoảng vài trăm mét.
+- **Danh sách khu vực (chốt 22/11/2026, chủ dự án giao Claude tự tìm):** TP Trà Vinh cũ nay là 4 phường của tỉnh Vĩnh Long (Nghị quyết 1687/NQ-UBTVQH15). Tên phường mới còn lạ, nên tên hiển thị dùng mốc quen thuộc. Tọa độ lấy từ Wikipedia và Google Maps, chỉ cần đúng khoảng vài trăm mét.
 
   | code | Tên hiển thị | Phường mới (phường cũ) | Tâm (lat, lng) |
   |---|---|---|---|
@@ -83,7 +83,7 @@ CREATE TABLE password_reset (
 ## Quy tắc
 
 - **Email:** dài tối đa 254 ký tự. Lưu sau khi trim và chuyển lowercase.
-- **Mật khẩu:** 8–128 ký tự, không được trùng email.
+- **Mật khẩu:** ít nhất 8 ký tự, tối đa 72 byte UTF-8 (khoảng 72 ký tự không dấu), không được trùng email. Giới hạn 72 byte là của bcrypt: Spring Security từ chối mật khẩu dài hơn (đổi từ 128 ký tự ngày 22/11/2026).
 - **Xác nhận tuổi:** `adultConfirmed` phải là `true`, tức người dùng tự xác nhận đủ 18 tuổi. App không thu ngày sinh.
 - **Khóa tạm khi đăng nhập sai:** sai 5 lần trong 15 phút (đếm theo email + IP trên Redis) thì bị khóa 15 phút, trả 429. Nhập mã đặt lại sai cũng áp dụng giới hạn tương tự.
 - **Đăng ký bằng email đã có trả 409:** việc này làm lộ một email đã đăng ký hay chưa. Đã chấp nhận rủi ro vì app quy mô nhỏ.
@@ -119,5 +119,5 @@ CREATE TABLE password_reset (
 
 ## Open Questions
 
-1. **Danh sách vùng:** đã có bản nháp 5 khu ở mục Khu vực. Chủ dự án xác nhận tên gọi trước khi viết migration và enum `Area`.
+1. ~~**Danh sách vùng**~~: đã chốt 5 khu ở mục Khu vực. Thêm hoặc đổi tên khu sau này chỉ cần sửa enum `Area` và deploy lại.
 2. **Ngưỡng 18 tuổi:** kiểm tra quy định về dữ liệu trẻ em trong Luật 91/2025 trước khi mời người dùng thật. Spec hiện giữ ngưỡng 18.

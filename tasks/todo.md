@@ -13,9 +13,9 @@ Lệnh kiểm tra chung:
 - [ ] **O1.** Phỏng vấn 5–8 cặp đôi và 4–5 người độc thân, ghi nguyên văn (Cổng 1, mục 2 tài liệu nghiên cứu).
 - [ ] **O2.** Tạo dự án Google Cloud. Gọi thử Place Details cho 5 quán ở Trà Vinh. Thử Text Search xem trả tối đa bao nhiêu kết quả. Giới hạn API key theo IP và đặt trần ngân sách.
 - [ ] **O3.** Mở app CGV, đếm số phim và số suất trong một tuần ở CGV Vincom Trà Vinh, ghi lại giá vé.
-- [ ] **O4.** Xác nhận bản nháp 5 khu vực trong `SPEC-account.md` (Claude đã tra Wikipedia và Google Maps ngày 22/11/2026).
+- [x] **O4.** Chủ dự án giao Claude tự tìm: 5 khu vực trong `SPEC-account.md` (Wikipedia, Google Maps, 22/11/2026).
 - [ ] **O5.** Tra quy định về dữ liệu trẻ em trong Luật 91/2025 (ngưỡng tuổi).
-- [ ] **O6.** ~~Đăng ký tên miền~~: dùng `evts.id.vn` sẵn có (hết hạn 26/07/2028, trang cũ đã dừng), app ở tên miền con `plandi.evts.id.vn`. Còn lại: chuyển DNS sang Cloudflare ở Task 5.
+- [x] **O6.** Dùng `evts.id.vn` sẵn có (hết hạn 26/07/2028), DNS đã chuyển sang Cloudflare. Staging: `plandi-staging.evts.id.vn`; production sau này: `plandi.evts.id.vn`.
 - [ ] **O7.** Đăng ký TMDB API token.
 
 ---
@@ -58,7 +58,7 @@ Lệnh kiểm tra chung:
 **Acceptance criteria:**
 - [x] `npm run lint && npm test && npm run build` xanh.
 - [x] Có test Vitest cho hàm format tiền: `180000` hiển thị thành `180.000đ`; nhập `180` thì được `180000`.
-- [ ] Mở trên điện thoại thì cài được thành PWA (có manifest và icon). Đã kiểm tra manifest và icon trên máy dev; cài thử trên điện thoại cần HTTPS, làm ở Task 5.
+- [x] Mở trên điện thoại thì cài được thành PWA (có manifest và icon). Cài thử qua staging ngày 22/11/2026, sau khi sửa kiểu MIME của manifest.
 
 **Done 22/11/2026:**
 - Vite 8, React 19, TypeScript, Vitest 5, vite-plugin-pwa 2.0.
@@ -83,13 +83,19 @@ Lệnh kiểm tra chung:
 **Files:** `.github/workflows/ci.yml`
 **Scope:** S.
 
-### Task 5: Staging tại nhà
+### Task 5: Staging tại nhà ✅
 **Description:** Viết `compose.prod.yml` (app, postgres, redis) và Dockerfile của backend phục vụ luôn `web/dist`. Chạy trên chính máy dev của chủ dự án (Windows, Docker Desktop), mở ra Internet qua Cloudflare Tunnel (`cloudflared` chạy như service). Máy phải bật thì link mới sống. Viết script deploy thủ công. Chỉ dùng dữ liệu giả.
 
 **Acceptance criteria:**
 - [x] `https://plandi-staging.evts.id.vn/actuator/health` trả 200 qua Cloudflare Tunnel (22/11/2026).
 - [x] Postgres và Redis không mở port ra ngoài.
-- [ ] `deploy.sh` chạy được: `git pull` → build → `docker compose up -d`.
+- [x] `deploy.sh` chạy được: `git pull` → build → `docker compose up -d`.
+
+**Done 22/11/2026:**
+- Tên miền staging là `plandi-staging.evts.id.vn` (chứng chỉ miễn phí của Cloudflare chỉ phủ tên miền con một cấp).
+- `cloudflared` chạy như một container trong `compose.prod.yml`, không cài service Windows.
+- Compose dùng tên project `plandi-staging` để không đụng volume Postgres của máy dev.
+- Tomcat trả manifest là `application/octet-stream`; thêm `server.mime-mappings` và `WebAppServingTest`. Mở từ điện thoại qua 4G và cài PWA được.
 
 **Verification:** Mở link staging từ điện thoại dùng 4G.
 **Dependencies:** Task 1, 3, O6.
@@ -97,20 +103,26 @@ Lệnh kiểm tra chung:
 **Scope:** M.
 
 ### Checkpoint 1 (cuối tuần 1)
-- [ ] CI xanh, staging trả 200, 5 ADR đã có.
-- [ ] Cập nhật mục Status và Commands trong `CLAUDE.md`.
+- [x] CI xanh, staging trả 200, 5 ADR đã có (thêm ADR-0006 về vị trí).
+- [x] Cập nhật mục Status và Commands trong `CLAUDE.md`.
 - [ ] Chủ dự án duyệt trước khi sang Phase 2. Nếu Cổng 1 trượt thì dừng lại xem lại spec.
 
 ---
 
 ## Phase 2: account + privacy
 
-### Task 6: Đăng ký, đăng nhập, đăng xuất, /me
+### Task 6: Đăng ký, đăng nhập, đăng xuất, /me ✅
 **Description:** Tạo bảng `account` và enum `Area` (dùng danh sách tạm nếu O4 chưa xong). Cấu hình Spring Security với session lưu trong Redis và CSRF đặt trong cookie. Làm các endpoint `register`, `login`, `logout`, `/me`, cùng `CurrentAccount` và event `AccountRegistered`.
 
 **Acceptance criteria:**
-- [ ] Test account #1, #2, #3, #5, #6, #8 xanh.
-- [ ] Ngoài `/auth/**`, `/areas` và `/actuator/health`, mọi endpoint trả 401 khi chưa đăng nhập.
+- [x] Test account #1, #2, #3, #5, #6, #8 xanh.
+- [x] Ngoài `/auth/**`, `/areas` và `/actuator/health`, mọi endpoint trả 401 khi chưa đăng nhập.
+
+**Done 22/11/2026:**
+- CSRF kiểu SPA (`csrf.spa()`) cần thêm filter đọc token ở mọi request, nếu không web không bao giờ nhận được cookie `XSRF-TOKEN`. Có `SpaAuthFlowTest` chạy Tomcat thật đi đúng luồng của `web/src/lib/api.ts`.
+- Tắt request cache của Spring Security: nếu không, mỗi request chưa đăng nhập tạo một phiên trong Redis.
+- Mật khẩu tối đa 72 byte (giới hạn bcrypt), spec đã sửa.
+- Principal trong phiên chỉ có id và vai trò, không có email hay hash mật khẩu.
 
 **Verification:** `./mvnw verify`.
 **Dependencies:** Task 1.
