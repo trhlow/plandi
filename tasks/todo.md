@@ -44,7 +44,8 @@ Lệnh kiểm tra chung:
 **Description:** Ghi 5 ADR theo mục 8 tài liệu nghiên cứu: monolith hay microservices; web/PWA hay native; cách gọi Google (xếp hạng lại); không dùng LLM; một repo.
 
 **Acceptance criteria:**
-- [ ] `docs/adr/0001…0005-*.md` đủ các phần: bối cảnh, quyết định, phương án khác, hệ quả.
+- [x] `docs/adr/0001…0005-*.md` đủ các phần: bối cảnh, quyết định, phương án khác, hệ quả.
+- [ ] Chủ dự án đọc và tự giải thích lại được từng ADR.
 
 **Verification:** Chủ dự án đọc và tự giải thích lại được từng ADR.
 **Dependencies:** Không.
