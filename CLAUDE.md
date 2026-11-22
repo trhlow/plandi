@@ -48,7 +48,7 @@ Skills are user-level (`~/.claude/skills`, plugins); invoke them at these points
 - Writing code: `incremental-implementation` + `test-driven-development`; commits and branches: `git-workflow-and-versioning`
 - Auth, consent, export/delete, encryption, invite links: `security-and-hardening`
 - Before deploy: `ci-cd-and-automation`, `observability-and-instrumentation`, `shipping-and-launch`
-- `web/` UI: `frontend-ui-engineering`, `accessibility-engineering`
+- `web/` UI: design each screen in Figma first (Figma MCP; PLANDI folder in the owner's education team), show the owner, then build it with `frontend-ui-engineering`, `accessibility-engineering`
 
 Where `superpowers:*` overlaps one of these (TDD, brainstorming), use the skill listed here.
 

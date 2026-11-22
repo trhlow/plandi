@@ -3,14 +3,19 @@ package com.plandi.account;
 import com.plandi.account.internal.Account;
 import com.plandi.account.internal.AccountRepository;
 import com.plandi.account.internal.EmailTakenException;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.ErrorResponseException;
 
 @Service
 public class AccountService {
@@ -55,5 +60,43 @@ public class AccountService {
     @Transactional(readOnly = true)
     public AccountView find(long accountId) {
         return accounts.findById(accountId).orElseThrow().view();
+    }
+
+    @Transactional
+    public AccountView updateProfile(long accountId, ProfileUpdate update) {
+        Account account = accounts.findById(accountId).orElseThrow();
+        account.updateProfile(update.displayName(), update.area());
+        return account.view();
+    }
+
+    /** Chỉ đổi mật khẩu; hủy các phiên khác là việc của tầng web (cần biết phiên hiện tại). */
+    @Transactional
+    public void changePassword(long accountId, String currentPassword, String newPassword) {
+        Account account = accounts.findById(accountId).orElseThrow();
+        if (!fitsBcrypt(currentPassword) || !passwordEncoder.matches(currentPassword, account.passwordHash())) {
+            throw badRequest("Mật khẩu hiện tại không đúng.");
+        }
+        requireValidPassword(newPassword, account.email());
+        account.changePassword(passwordEncoder.encode(newPassword), Instant.now());
+        log.info("password changed accountId={}", accountId);
+    }
+
+    // Cùng quy tắc với RegistrationRequest: ít nhất 8 ký tự, tối đa 72 byte (bcrypt), khác email.
+    static void requireValidPassword(String password, String email) {
+        if (password == null
+                || password.length() < 8
+                || !fitsBcrypt(password)
+                || password.strip().equalsIgnoreCase(email)) {
+            throw badRequest("Mật khẩu mới phải có ít nhất 8 ký tự, tối đa 72 byte và khác email.");
+        }
+    }
+
+    private static boolean fitsBcrypt(String password) {
+        return password != null && password.getBytes(StandardCharsets.UTF_8).length <= 72;
+    }
+
+    private static ErrorResponseException badRequest(String detail) {
+        return new ErrorResponseException(
+                HttpStatus.BAD_REQUEST, ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, detail), null);
     }
 }
