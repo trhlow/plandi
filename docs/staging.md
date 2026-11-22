@@ -40,6 +40,16 @@ curl https://plandi-staging.evts.id.vn/actuator/health  # từ điện thoại d
 docker compose -f compose.prod.yml logs -f app cloudflared
 ```
 
+## Cấp quyền ADMIN
+
+Không có giao diện cấp quyền. Đăng ký tài khoản như người dùng thường, rồi chạy:
+
+```bash
+docker compose -f compose.prod.yml exec postgres   psql -U plandi -d plandi -c "UPDATE account SET role = 'ADMIN' WHERE email = 'email-cua-ban@example.com';"
+```
+
+Đăng xuất rồi đăng nhập lại để phiên mới mang quyền ADMIN. Quyền này dùng để tạo mã đặt lại mật khẩu (`POST /api/v1/admin/password-resets`) khi người dùng nhắn qua Zalo.
+
 ## Ghi chú
 
 - Mật khẩu Postgres và `PLANDI_DATA_KEY` trong `.env` được sinh ngẫu nhiên khi tạo file. Mất `.env` thì phải xóa volume `pgdata` để tạo DB mới, vì đây là dữ liệu giả.

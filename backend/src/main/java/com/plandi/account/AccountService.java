@@ -82,7 +82,7 @@ public class AccountService {
     }
 
     // Cùng quy tắc với RegistrationRequest: ít nhất 8 ký tự, tối đa 72 byte (bcrypt), khác email.
-    static void requireValidPassword(String password, String email) {
+    public static void requireValidPassword(String password, String email) {
         if (password == null
                 || password.length() < 8
                 || !fitsBcrypt(password)
