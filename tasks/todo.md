@@ -87,7 +87,7 @@ Lệnh kiểm tra chung:
 **Description:** Viết `compose.prod.yml` (app, postgres, redis) và Dockerfile của backend phục vụ luôn `web/dist`. Chạy trên chính máy dev của chủ dự án (Windows, Docker Desktop), mở ra Internet qua Cloudflare Tunnel (`cloudflared` chạy như service). Máy phải bật thì link mới sống. Viết script deploy thủ công. Chỉ dùng dữ liệu giả.
 
 **Acceptance criteria:**
-- [ ] `https://<staging-domain>/actuator/health` trả 200 qua Cloudflare Tunnel.
+- [ ] `https://plandi-staging.evts.id.vn/actuator/health` trả 200 qua Cloudflare Tunnel.
 - [ ] Postgres và Redis không mở port ra ngoài.
 - [ ] `deploy.sh` chạy được: `git pull` → build → `docker compose up -d`.
 

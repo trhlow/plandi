@@ -1,0 +1,50 @@
+# Staging/production: docker compose -f compose.prod.yml up -d --build (xem deploy.sh, docs/staging.md).
+# Postgres và Redis không mở port ra ngoài; chỉ app thấy chúng trong mạng nội bộ của compose.
+# Tên project riêng để không dùng chung container và volume pgdata với compose.yaml của máy dev.
+name: plandi-staging
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    # Chỉ mở trên loopback để tự kiểm tra trên máy; người ngoài vào qua Cloudflare Tunnel.
+    ports:
+      - "127.0.0.1:8081:8080"
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: plandi
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d plandi"]
+      interval: 5s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - app
+    restart: unless-stopped
+
+volumes:
+  pgdata:
