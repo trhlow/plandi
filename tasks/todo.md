@@ -71,12 +71,12 @@ Lệnh kiểm tra chung:
 **Files:** `web/package.json`, `web/vite.config.ts`, `web/src/lib/api.ts`, `web/src/lib/money.ts`, `web/src/lib/money.test.ts`
 **Scope:** M.
 
-### Task 4: CI GitHub Actions
+### Task 4: CI GitHub Actions ✅
 **Description:** Workflow chạy trên mỗi PR vào `main`: job backend chạy `./mvnw verify`, job web chạy lint, test và build.
 
 **Acceptance criteria:**
-- [ ] Một PR thử có cả hai job xanh.
-- [ ] Testcontainers chạy được trên runner `ubuntu-latest`.
+- [x] Một PR thử có cả hai job xanh (PR #1, 22/11/2026: backend 47 giây, web 16 giây).
+- [x] Testcontainers chạy được trên runner `ubuntu-latest`.
 
 **Verification:** Mở một PR thử.
 **Dependencies:** Task 1, 3.
