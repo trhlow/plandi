@@ -36,11 +36,13 @@ class AuthController {
 
     private final AccountService accounts;
     private final AuthenticationManager authenticationManager;
+    private final LoginThrottle throttle;
     private final SecurityContextRepository contextRepository = new HttpSessionSecurityContextRepository();
 
-    AuthController(AccountService accounts, AuthenticationManager authenticationManager) {
+    AuthController(AccountService accounts, AuthenticationManager authenticationManager, LoginThrottle throttle) {
         this.accounts = accounts;
         this.authenticationManager = authenticationManager;
+        this.throttle = throttle;
     }
 
     record LoginRequest(String email, String password) {}
@@ -62,14 +64,26 @@ class AuthController {
                 || body.password().getBytes(StandardCharsets.UTF_8).length > 72) {
             throw badCredentials();
         }
+        // Sau proxy (Cloudflare Tunnel), Tomcat lấy IP thật từ X-Forwarded-For: server.forward-headers-strategy=native.
+        String ip = request.getRemoteAddr();
+        if (throttle.isLocked(body.email(), ip)) {
+            log.info("login locked");
+            throw new ErrorResponseException(
+                    HttpStatus.TOO_MANY_REQUESTS,
+                    ProblemDetail.forStatusAndDetail(
+                            HttpStatus.TOO_MANY_REQUESTS, "Bạn đã nhập sai quá nhiều lần. Thử lại sau 15 phút."),
+                    null);
+        }
         Authentication authenticated;
         try {
             authenticated = authenticationManager.authenticate(
                     UsernamePasswordAuthenticationToken.unauthenticated(body.email(), body.password()));
         } catch (AuthenticationException e) {
+            throttle.recordFailure(body.email(), ip);
             log.info("login failed");
             throw badCredentials();
         }
+        throttle.reset(body.email(), ip);
         long accountId = Long.parseLong(authenticated.getName());
         Role role = authenticated.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()))
                 ? Role.ADMIN

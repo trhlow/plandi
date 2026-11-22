@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.Instant;
 
 @Entity
 public class Account {
@@ -31,6 +32,10 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
+    // DB đặt now() khi tạo; app chỉ ghi khi đổi hoặc đặt lại mật khẩu.
+    @Column(name = "password_changed_at", insertable = false)
+    private Instant passwordChangedAt;
+
     protected Account() {}
 
     public Account(String email, String passwordHash, String displayName, Area area) {
@@ -44,8 +49,26 @@ public class Account {
         return id;
     }
 
-    String passwordHash() {
+    public String email() {
+        return email;
+    }
+
+    public String passwordHash() {
         return passwordHash;
+    }
+
+    public void changePassword(String newPasswordHash, Instant changedAt) {
+        this.passwordHash = newPasswordHash;
+        this.passwordChangedAt = changedAt;
+    }
+
+    public void updateProfile(String displayName, Area area) {
+        if (displayName != null) {
+            this.displayName = displayName;
+        }
+        if (area != null) {
+            this.area = area;
+        }
     }
 
     Role role() {

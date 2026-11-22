@@ -40,12 +40,12 @@ Lệnh kiểm tra chung:
 **Files:** `backend/pom.xml`, `backend/src/main/java/com/plandi/PlandiApplication.java`, `backend/src/test/java/com/plandi/ModularityTest.java`, `backend/src/test/java/com/plandi/IntegrationTest.java`, `compose.yaml`, `.env.example`
 **Scope:** M. Kiểm tra trước tiên: Boot 4, Modulith và Testcontainers có tương thích nhau không. Không hợp thì ghi lại và hỏi chủ dự án.
 
-### Task 2: Năm ADR
+### Task 2: Năm ADR ✅
 **Description:** Ghi 5 ADR theo mục 8 tài liệu nghiên cứu: monolith hay microservices; web/PWA hay native; cách gọi Google (xếp hạng lại); không dùng LLM; một repo.
 
 **Acceptance criteria:**
 - [x] `docs/adr/0001…0005-*.md` đủ các phần: bối cảnh, quyết định, phương án khác, hệ quả.
-- [ ] Chủ dự án đọc và tự giải thích lại được từng ADR.
+- [x] Chủ dự án đọc và tự giải thích lại được từng ADR.
 
 **Verification:** Chủ dự án đọc và tự giải thích lại được từng ADR.
 **Dependencies:** Không.
@@ -129,11 +129,16 @@ Lệnh kiểm tra chung:
 **Files:** `V1__account.sql`, `account/AccountService.java`, `account/CurrentAccount.java`, `account/internal/AuthController.java`, `shared/SecurityConfig.java`, các test
 **Scope:** M. Dùng skill `security-and-hardening`.
 
-### Task 7: Khóa tạm khi sai, đổi mật khẩu, hồ sơ, khu vực
+### Task 7: Khóa tạm khi sai, đổi mật khẩu, hồ sơ, khu vực ✅
 **Description:** Khóa tạm theo email + IP dùng Redis. Endpoint `PUT /me/password` hủy các phiên khác. `PATCH /me` sửa hồ sơ, `GET /areas` trả danh sách khu vực. Thêm guard ADMIN cho `/admin/**`. Log không chứa email.
 
 **Acceptance criteria:**
-- [ ] Test account #4, #7, #9, #10 xanh.
+- [x] Test account #4, #7, #9, #10 xanh.
+
+**Done 22/11/2026:**
+- Phiên Redis chuyển sang loại indexed (`spring.session.data.redis.repository-type`, tên mới của Boot 4) để tìm được mọi phiên của một tài khoản.
+- Khóa đăng nhập đếm theo hash của email + IP trên Redis. Sau Cloudflare Tunnel, IP thật lấy từ `X-Forwarded-For` (`server.forward-headers-strategy=native`).
+- Test #9 phần ADMIN hiện kiểm tra 404 (qua được phân quyền) vì chưa có endpoint admin; Task 8 thêm `POST /admin/password-resets`.
 
 **Verification:** `./mvnw verify`.
 **Dependencies:** Task 6.
